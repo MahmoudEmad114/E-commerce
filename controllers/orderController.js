@@ -16,7 +16,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
      return next(new AppError('Duplicate products in order', 400));
      }
      
-     const orderItems = [];
+     const validatedItems = [];
      let totalPrice = 0;
 
      for (const item of items) {
@@ -37,17 +37,26 @@ exports.createOrder = catchAsync(async (req, res, next) => {
                return next(new AppError(`Insufficient stock for ${product.name}`, 400));
           }
 
-          orderItems.push({
-               product: product._id,
+          validatedItems.push({
+               product,  
                quantity: item.quantity,
                price: product.price
           });
 
           totalPrice += product.price * item.quantity;
 
-          product.stock -= item.quantity;
-          await product.save();
      }
+
+      for (const v of validatedItems) {
+          v.product.stock -= v.quantity;
+          await v.product.save();
+     }
+
+     const orderItems = validatedItems.map(v => ({
+          product: v.product._id,
+          quantity: v.quantity,
+          price: v.price
+     }));
 
      const order = await Order.create({
      customer: req.user.id,
