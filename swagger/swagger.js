@@ -130,6 +130,222 @@ const swaggerOptions = {
                             example: 'admin'
                         }
                     }
+                },
+
+                OrderItem: {
+                    type: 'object',
+                    properties: {
+                        product: {
+                            type: 'string',
+                            description: 'Product ID',
+                            example: '65f1a2b3c4d5e6f7a8b9c0d1'
+                        },
+                        quantity: {
+                            type: 'integer',
+                            minimum: 1,
+                            description: 'Quantity ordered',
+                            example: 2
+                        },
+                        price: {
+                            type: 'number',
+                            description: 'Price at time of order',
+                            example: 29.99
+                        }
+                    }
+                },
+
+                OrderItemPopulated: {
+                    type: 'object',
+                    properties: {
+                        product: {
+                            type: 'object',
+                            properties: {
+                                _id: {
+                                    type: 'string',
+                                    example: '65f1a2b3c4d5e6f7a8b9c0d1'
+                                },
+                                name: {
+                                    type: 'string',
+                                    example: 'Wireless Headphones'
+                                },
+                                price: {
+                                    type: 'number',
+                                    example: 29.99
+                                },
+                                imageUrl: {
+                                    type: 'string',
+                                    example: 'https://example.com/image.jpg'
+                                }
+                            }
+                        },
+                        quantity: {
+                            type: 'integer',
+                            example: 2
+                        },
+                        price: {
+                            type: 'number',
+                            example: 29.99
+                        }
+                    }
+                },
+
+                Order: {
+                    type: 'object',
+                    properties: {
+                        _id: {
+                            type: 'string',
+                            description: 'Order ID',
+                            example: '66c8f1a2b3c4d5e6f7a8b9c0'
+                        },
+                        customer: {
+                            type: 'string',
+                            description: 'Customer ID',
+                            example: '66c8f1a2b3c4d5e6f7a8b9c1'
+                        },
+                        items: {
+                            type: 'array',
+                            items: {
+                                $ref: '#/components/schemas/OrderItem'
+                            }
+                        },
+                        totalPrice: {
+                            type: 'number',
+                            description: 'Total order price',
+                            example: 59.98
+                        },
+                        status: {
+                            type: 'string',
+                            enum: ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'],
+                            description: 'Order status',
+                            example: 'Pending'
+                        },
+                        createdAt: {
+                            type: 'string',
+                            format: 'date-time',
+                            description: 'Order creation timestamp'
+                        },
+                        updatedAt: {
+                            type: 'string',
+                            format: 'date-time',
+                            description: 'Order last update timestamp'
+                        }
+                    }
+                },
+
+                OrderWithCustomer: {
+                    type: 'object',
+                    properties: {
+                        _id: {
+                            type: 'string',
+                            example: '66c8f1a2b3c4d5e6f7a8b9c0'
+                        },
+                        customer: {
+                            type: 'object',
+                            properties: {
+                                _id: {
+                                    type: 'string',
+                                    example: '66c8f1a2b3c4d5e6f7a8b9c1'
+                                },
+                                name: {
+                                    type: 'string',
+                                    example: 'John Doe'
+                                },
+                                email: {
+                                    type: 'string',
+                                    format: 'email',
+                                    example: 'john@example.com'
+                                }
+                            }
+                        },
+                        items: {
+                            type: 'array',
+                            items: {
+                                $ref: '#/components/schemas/OrderItem'
+                            }
+                        },
+                        totalPrice: {
+                            type: 'number',
+                            example: 59.98
+                        },
+                        status: {
+                            type: 'string',
+                            enum: ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'],
+                            example: 'Pending'
+                        },
+                        createdAt: {
+                            type: 'string',
+                            format: 'date-time'
+                        },
+                        updatedAt: {
+                            type: 'string',
+                            format: 'date-time'
+                        }
+                    }
+                },
+
+                OrderDetailed: {
+                    type: 'object',
+                    properties: {
+                        _id: {
+                            type: 'string',
+                            example: '66c8f1a2b3c4d5e6f7a8b9c0'
+                        },
+                        customer: {
+                            type: 'object',
+                            properties: {
+                                _id: {
+                                    type: 'string',
+                                    example: '66c8f1a2b3c4d5e6f7a8b9c1'
+                                },
+                                name: {
+                                    type: 'string',
+                                    example: 'John Doe'
+                                },
+                                email: {
+                                    type: 'string',
+                                    format: 'email',
+                                    example: 'john@example.com'
+                                }
+                            }
+                        },
+                        items: {
+                            type: 'array',
+                            items: {
+                                $ref: '#/components/schemas/OrderItemPopulated'
+                            }
+                        },
+                        totalPrice: {
+                            type: 'number',
+                            example: 59.98
+                        },
+                        status: {
+                            type: 'string',
+                            enum: ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'],
+                            example: 'Pending'
+                        },
+                        createdAt: {
+                            type: 'string',
+                            format: 'date-time'
+                        },
+                        updatedAt: {
+                            type: 'string',
+                            format: 'date-time'
+                        }
+                    }
+                },
+
+                Error: {
+                    type: 'object',
+                    properties: {
+                        status: {
+                            type: 'string',
+                            example: 'error'
+                        },
+                        message: {
+                            type: 'string',
+                            example: 'Something went wrong'
+                        }
+                    }
                 }
             },
 
