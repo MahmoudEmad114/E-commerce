@@ -8,6 +8,7 @@ const globalErrorHandler = require('./controllers/errorController')
 const userRouter = require('./routes/userRoutes');
 const authRouter = require('./routes/authRoutes');
 const orderRouter = require('./routes/orderRoutes');
+const productRouter = require('./routes/productRoutes');
 const swaggerSpecs = require('./swagger/swagger');
 
 const app = express();
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/orders', orderRouter);
+app.use('/api/v1/products', productRouter);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 

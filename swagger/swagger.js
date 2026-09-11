@@ -1,3 +1,4 @@
+
 const swaggerJSDoc = require('swagger-jsdoc');
 
 const swaggerOptions = {
@@ -29,7 +30,11 @@ const swaggerOptions = {
             {
                 name: 'orders',
                 description: 'Customer order management endpoints'
-            }
+            },
+    {
+    name: 'products',
+    description: 'Product management endpoints'
+}
         ],
 
         components: {
@@ -144,8 +149,7 @@ const swaggerOptions = {
         }
     },
 
-    apis: ['./routes/*.js']
-};
+apis: ['./routes/*.js']};
 
 const specs = swaggerJSDoc(swaggerOptions);
 
