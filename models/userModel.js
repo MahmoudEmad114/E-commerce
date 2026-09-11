@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -14,12 +15,17 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true,
         trim: true,
-        validator: [validator.isEmail, 'Please provide a valid email']
+        validate: [validator.isEmail, 'Please provide a valid email']
     },
     password: {
         type: String,
         required: [true, 'Password is required'],
-        minlength: [8, 'Password must be at least 8 characters']
+        minlength: [8, 'Password must be at least 8 characters'],
+        select: false
+    },
+    passwordChangedAt: {
+        type: Date,
+        default: undefined
     },
     role: {
         type: String,
@@ -31,6 +37,25 @@ const userSchema = new mongoose.Schema({
         timestamps: true
     }
 )
+
+userSchema.pre('save', async function () {
+    if (!this.isModified('password')) return;
+
+    this.password = await bcrypt.hash(this.password, 12);
+    this.passwordChangedAt = undefined;
+});
+
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+    return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+    if (this.passwordChangedAt) {
+        const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
+        return JWTTimestamp < changedTimestamp;
+    }
+    return false;
+};
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

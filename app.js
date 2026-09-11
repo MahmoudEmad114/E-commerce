@@ -1,8 +1,12 @@
 const express = require('express')
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const swaggerUi = require('swagger-ui-express');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController')
+const authRouter = require('./routes/authRoutes');
+const swaggerSpecs = require('./swagger/swagger');
 
 const app = express();
 
@@ -16,6 +20,11 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+app.use(cookieParser());
+
+app.use('/api/v1/users', authRouter);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 app.all('/{*splat}', (req, res, next) => {
     return next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
