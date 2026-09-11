@@ -4,6 +4,11 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
+router.get('/me',
+    authMiddleware.protect,
+    userController.getMe,
+    userController.getUser);
+
 router.use(authMiddleware.protect, authMiddleware.restrictTo('admin'))
 /**
  * @openapi

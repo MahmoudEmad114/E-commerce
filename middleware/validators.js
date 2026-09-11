@@ -1,4 +1,5 @@
 const { validationResult, body, query, param } = require("express-validator");
+const AppError = require("../utils/appError");
 
 exports.validate = (req, res, next) => {
   const errors = validationResult(req);
@@ -59,7 +60,7 @@ exports.validateStatus = [
   body("status")
     .notEmpty()
     .withMessage("Status is required")
-    .isIn(["Pending", "Shipped", "Delivered", "Cancelled"])
+    .isIn(["Confirmed", "Pending", "Shipped", "Delivered", "Cancelled"])
     .withMessage(
       "Status must be one of the following: Pending, Shipped, Delivered, Cancelled",
     ),

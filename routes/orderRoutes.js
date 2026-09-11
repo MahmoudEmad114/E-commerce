@@ -3,10 +3,10 @@ const orderController = require("../controllers/orderController");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
 const validator = require("express-validator");
 const {
-  validateId,
-  validateStatus,
-  validate,
-  validatePagination,
+    validateId,
+    validateStatus,
+    validate,
+    validatePagination,
 } = require("../middleware/validators");
 const router = express.Router();
 
@@ -157,7 +157,7 @@ router.get("/my", restrictTo("customer"), orderController.getMyOrders);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get("/:id", restrictTo("customer"), orderController.getOrderById);
+router.get("/:id", restrictTo("customer", "admin"), orderController.getOrderById);
 
 /**
  * @openapi
@@ -273,9 +273,9 @@ router.use(restrictTo("admin"));
  *               $ref: '#/components/schemas/Error'
  */
 router.get(
-  "/",
-  [...validatePagination, validate],
-  orderController.getAllOrders,
+    "/",
+    [...validatePagination, validate],
+    orderController.getAllOrders,
 );
 
 /**
@@ -326,9 +326,9 @@ router.get(
  *               $ref: '#/components/schemas/Error'
  */
 router.get(
-  "/:id/details",
-  [...validateId, validate],
-  orderController.getOrderDetails,
+    "/:id/details",
+    [...validateId, validate],
+    orderController.getOrderDetails,
 );
 
 /**
@@ -400,10 +400,10 @@ router.get(
  *               $ref: '#/components/schemas/Error'
  */
 router.patch(
-  "/:id/status",
-  [...validateId, ...validateStatus],
-  validate,
-  orderController.updateOrderStatus,
+    "/:id/status",
+    [...validateId, ...validateStatus],
+    validate,
+    orderController.updateOrderStatus,
 );
 
 module.exports = router;
