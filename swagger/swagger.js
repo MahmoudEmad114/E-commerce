@@ -18,6 +18,10 @@ const swaggerOptions = {
             {
                 name: 'auth',
                 description: 'Authentication endpoints'
+            },
+            {
+                name: 'orders',
+                description: 'Customer order management endpoints'
             }
         ],
         components: {
