@@ -43,7 +43,7 @@ const loginRules = [
 
 /**
  * @openapi
- * /users/signup:
+ * /auth/signup:
  *   post:
  *     tags:
  *       - auth
@@ -85,7 +85,7 @@ router.post('/signup', signupRules, validate, authController.signup);
 
 /**
  * @openapi
- * /users/login:
+ * /auth/login:
  *   post:
  *     tags:
  *       - auth
@@ -128,7 +128,7 @@ router.post('/login', loginRules, validate, authController.login);
 
 /**
  * @openapi
- * /users/logout:
+ * /auth/logout:
  *   post:
  *     tags:
  *       - auth

@@ -1,21 +1,21 @@
-const Order = require('../models/Order')
-const Product = require('../models/Product');
+const Order = require('../models/orderModel')
+const Product = require('../models/productModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.createOrder = catchAsync(async (req, res, next) => {
-     const {items } = req.body;
+     const { items } = req.body;
 
      if (!items || items.length === 0) {
-     return next(new AppError('Order cannot be empty', 400));
+          return next(new AppError('Order cannot be empty', 400));
      }
 
      const productIds = items.map(i => i.productId);
      const hasDuplicates = new Set(productIds).size !== productIds.length;
      if (hasDuplicates) {
-     return next(new AppError('Duplicate products in order', 400));
+          return next(new AppError('Duplicate products in order', 400));
      }
-     
+
      const validatedItems = [];
      let totalPrice = 0;
 
@@ -38,7 +38,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
           }
 
           validatedItems.push({
-               product,  
+               product,
                quantity: item.quantity,
                price: product.price
           });
@@ -47,7 +47,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
 
      }
 
-      for (const v of validatedItems) {
+     for (const v of validatedItems) {
           v.product.stock -= v.quantity;
           await v.product.save();
      }
@@ -59,36 +59,36 @@ exports.createOrder = catchAsync(async (req, res, next) => {
      }));
 
      const order = await Order.create({
-     customer: req.user.id,
-     items: orderItems,
-     totalPrice,
-     status: 'Pending'
+          customer: req.user.id,
+          items: orderItems,
+          totalPrice,
+          status: 'Pending'
      });
 
      res.status(201).json({
-     status: 'success',
-     data: { order }
+          status: 'success',
+          data: { order }
      });
 });
 
 
-exports.getMyOrders = catchAsync(async (req, res, next)=>{
+exports.getMyOrders = catchAsync(async (req, res, next) => {
      const orders = await Order.find({ customer: req.user.id }).populate(
-     'items.product',
-     'name price imageUrl'
+          'items.product',
+          'name price imageUrl'
      );
 
      res.status(200).json({
-     status: 'success',
-     results: orders.length,
-     data: { orders }
+          status: 'success',
+          results: orders.length,
+          data: { orders }
      });
 });
 
-exports.getOrderById  = catchAsync(async (req, res, next)=>{
-     const order = await Order.findById(req.params.id ).populate(
-     'items.product',
-     'name price imageUrl'
+exports.getOrderById = catchAsync(async (req, res, next) => {
+     const order = await Order.findById(req.params.id).populate(
+          'items.product',
+          'name price imageUrl'
      );
      if (!order) {
           return next(new AppError('Order not found', 404));
@@ -98,42 +98,42 @@ exports.getOrderById  = catchAsync(async (req, res, next)=>{
      }
 
      res.status(200).json({
-     status: 'success',
-     data: { order }
+          status: 'success',
+          data: { order }
      });
 });
 
 exports.cancelOrder = catchAsync(async (req, res, next) => {
-  const order = await Order.findById(req.params.id);
+     const order = await Order.findById(req.params.id);
 
-  if (!order) {
-    return next(new AppError('Order not found', 404));
-  }
+     if (!order) {
+          return next(new AppError('Order not found', 404));
+     }
 
-  if (order.customer.toString() !== req.user.id) {
-    return next(new AppError('Access denied', 403));
-  }
+     if (order.customer.toString() !== req.user.id) {
+          return next(new AppError('Access denied', 403));
+     }
 
-  if (order.status === 'Cancelled') {
-    return next(new AppError('Order is already cancelled', 400));
-  }
+     if (order.status === 'Cancelled') {
+          return next(new AppError('Order is already cancelled', 400));
+     }
 
-  if (order.status === 'Delivered') {
-    return next(new AppError('Cannot cancel a delivered order', 400));
-  }
+     if (order.status === 'Delivered') {
+          return next(new AppError('Cannot cancel a delivered order', 400));
+     }
 
-  for (const item of order.items) {
-    await Product.findByIdAndUpdate(item.product, {
-      $inc: { stock: item.quantity }
-    });
-  }
+     for (const item of order.items) {
+          await Product.findByIdAndUpdate(item.product, {
+               $inc: { stock: item.quantity }
+          });
+     }
 
-  order.status = 'Cancelled';
-  await order.save();
+     order.status = 'Cancelled';
+     await order.save();
 
-  res.status(200).json({
-    status: 'success',
-    message: 'Order cancelled successfully',
-    data: { order }
-  });
+     res.status(200).json({
+          status: 'success',
+          message: 'Order cancelled successfully',
+          data: { order }
+     });
 });

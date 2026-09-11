@@ -3,27 +3,35 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
+
         info: {
             title: 'E-commerce API',
             version: '1.0.0',
             description: 'REST API documentation for the E-commerce platform'
         },
+
         servers: [
             {
-                url: '/api/v1',
-                description: 'API base path'
+                url: 'http://localhost:8000/api/v1',
+                description: 'Local development server'
             }
         ],
+
         tags: [
             {
                 name: 'auth',
                 description: 'Authentication endpoints'
             },
             {
+                name: 'users',
+                description: 'Admin user management endpoints'
+            },
+            {
                 name: 'orders',
                 description: 'Customer order management endpoints'
             }
         ],
+
         components: {
             schemas: {
                 User: {
@@ -31,7 +39,7 @@ const swaggerOptions = {
                     properties: {
                         _id: {
                             type: 'string',
-                            example: '6aa3393e94cb35fed77757ed'
+                            example: '66c8f1a2b3c4d5e6f7a8b9c0'
                         },
                         name: {
                             type: 'string',
@@ -57,6 +65,7 @@ const swaggerOptions = {
                         }
                     }
                 },
+
                 SignupInput: {
                     type: 'object',
                     required: ['name', 'email', 'password'],
@@ -79,6 +88,7 @@ const swaggerOptions = {
                         }
                     }
                 },
+
                 LoginInput: {
                     type: 'object',
                     required: ['email', 'password'],
@@ -94,14 +104,37 @@ const swaggerOptions = {
                             example: 'password123'
                         }
                     }
+                },
+
+                UpdateUserInput: {
+                    type: 'object',
+                    properties: {
+                        name: {
+                            type: 'string',
+                            minLength: 2,
+                            example: 'John Updated'
+                        },
+                        email: {
+                            type: 'string',
+                            format: 'email',
+                            example: 'john.updated@example.com'
+                        },
+                        role: {
+                            type: 'string',
+                            enum: ['customer', 'admin'],
+                            example: 'admin'
+                        }
+                    }
                 }
             },
+
             securitySchemes: {
                 bearerAuth: {
                     type: 'http',
                     scheme: 'bearer',
                     bearerFormat: 'JWT'
                 },
+
                 cookieAuth: {
                     type: 'apiKey',
                     in: 'cookie',
@@ -110,6 +143,7 @@ const swaggerOptions = {
             }
         }
     },
+
     apis: ['./routes/*.js']
 };
 

@@ -5,6 +5,7 @@ const swaggerUi = require('swagger-ui-express');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController')
+const userRouter = require('./routes/userRoutes');
 const authRouter = require('./routes/authRoutes');
 const orderRouter = require('./routes/orderRoutes');
 const swaggerSpecs = require('./swagger/swagger');
@@ -23,8 +24,9 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api/v1/users', authRouter);
-app.use('/api/v1/orders', orderRouter); 
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/orders', orderRouter);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 

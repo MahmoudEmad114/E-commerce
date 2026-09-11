@@ -3,27 +3,27 @@ const mongoose = require('mongoose');
 const orderItemSchema = new mongoose.Schema(
      {
           product: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Product', 
-          required: [true, 'Order item must belong to a product']
+               type: mongoose.Schema.Types.ObjectId,
+               ref: 'Product',
+               required: [true, 'Order item must belong to a product']
           },
           price: {
-          type: Number,
-          required: [true, 'Price is required']
+               type: Number,
+               required: [true, 'Price is required']
           },
           quantity: {
-          type: Number,
-          required: [true, 'Quantity is required'],
-          min: [1, 'Quantity must be at least 1']
+               type: Number,
+               required: [true, 'Quantity is required'],
+               min: [1, 'Quantity must be at least 1']
           },
      }
 );
 
 const orderSchema = new mongoose.Schema(
      {
-               customer: {
+          customer: {
                type: mongoose.Schema.Types.ObjectId,
-               ref: 'User', 
+               ref: 'User',
                required: [true, 'Order must belong to a customer']
           },
 
@@ -41,15 +41,15 @@ const orderSchema = new mongoose.Schema(
           items: {
                type: [orderItemSchema],
                validate: {
-               validator: function (arr) {
-                    return arr.length > 0;
-               },
-               message: 'Order must contain at least one item'
+                    validator: function (arr) {
+                         return arr.length > 0;
+                    },
+                    message: 'Order must contain at least one item'
                }
           },
      },
      {
-     timestamps: true // createdAt , updatedAt
+          timestamps: true // createdAt , updatedAt
      }
 );
 
