@@ -2,6 +2,8 @@ const express = require('express')
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const swaggerUi = require('swagger-ui-express');
+const aiRoutes = require('./routes/aiRoutes');
+
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController')
@@ -29,6 +31,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/products', productRouter);
+app.use('/api/ai', aiRoutes)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
